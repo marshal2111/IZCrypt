@@ -1,23 +1,23 @@
-#ifndef TNCIPHER_H
-#define TNCIPHER_H
+#ifndef IZCIPHER_H
+#define IZCIPHER_H
 
-#include "../src/h/cipher/TNCipher_p.h"
+#include "../src/h/cipher/IZCipher_p.h"
 
 /** @brief Алгоритмы шифрования */
-typedef enum tnCipherAlgorithms_t {
-	tnIdCipherAlgorithmMagma,
-	tnIdCipherAlgorithmKyznechik
-} tnCipherAlgorithms;
+typedef enum izCipherAlgorithms_t {
+	izIdCipherAlgorithmMagma,
+	izIdCipherAlgorithmKyznechik
+} izCipherAlgorithms;
 
 /** @brief Режимы шифрования */
-typedef enum tnCipherMode_t {
-	tnIdCipherModeECB,
-	tnIdCipherModeCTR,
-	tnIdCipherModeOFB,
-	tnIdCipherModeCBC,
-	tnIdCipherModeCFB,
-	tnIdCipherModeMAC
-} tnCipherMode;
+typedef enum izCipherMode_t {
+	izIdCipherModeECB,
+	izIdCipherModeCTR,
+	izIdCipherModeOFB,
+	izIdCipherModeCBC,
+	izIdCipherModeCFB,
+	izIdCipherModeMAC
+} izCipherMode;
 
 /** @brief Шифрование входного битового вектора "vIn" размера "sInSize", 
 *		результат запишется в выходной буффер "vOut" при достаточном размере указанном в "psOutSize".
@@ -38,9 +38,9 @@ typedef enum tnCipherMode_t {
 *	@param[in_out]	psOutSize	Размер выходного вектора (в байтах)
 *	@return Статус операции
 */
-tnStatus tnEncrypt(
-	__in	tnCipherAlgorithms eAlgorithm,
-	__in	tnCipherMode eMode,
+izStatus izEncrypt(
+	__in	izCipherAlgorithms eAlgorithm,
+	__in	izCipherMode eMode,
 	__in	const void* cvIn,
 	__in	size_t sInSize,
 	__in	const void* cvKey,
@@ -68,9 +68,9 @@ tnStatus tnEncrypt(
 *	@param[in_out]	psOutSize	Размер выходного вектора (в байтах)
 *	@return Статус операции
 */
-tnStatus tnDecrypt(
-	__in	tnCipherAlgorithms eAlgorithm,
-	__in	tnCipherMode eMode,
+izStatus izDecrypt(
+	__in	izCipherAlgorithms eAlgorithm,
+	__in	izCipherMode eMode,
 	__in	const void* cvIn,
 	__in	size_t sInSize,
 	__in	const void* cvKey,
@@ -81,29 +81,29 @@ tnStatus tnDecrypt(
 	__inout	size_t* psOutSize);
 
 /** @brief Структура для хранения контекста шифрования */
-typedef struct tnEncryptionCtx_t tnEncryptionCtx;
+typedef struct izEncryptionCtx_t izEncryptionCtx;
 
 /** @brief Инициализация контекста для поточного шифрования
 *
 *	@param[in_out]	sCtx	Контекст шифрования
 *	@return Статус операции
 */
-tnStatus tnEncryptionCtxInit(
-	__inout tnEncryptionCtx* sCtx);
+izStatus izEncryptionCtxInit(
+	__inout izEncryptionCtx* sCtx);
 
 /** @brief Очистка контекста шифрования
 *
 *	@param[in_out]	sCtx	Контекст шифрования
 *	@return Статус операции
 */
-tnStatus tnEncryptionCtxFree(
-	__in tnEncryptionCtx* sCtx);
+izStatus izEncryptionCtxFree(
+	__in izEncryptionCtx* sCtx);
 
 /** @brief Ключи параметров (Принимающих конктерное значение)*/
-typedef enum tnCipherPropertyName_t {
-	tnCipherPropertyAlgorithm,
-	tnCipherPropertyMode
-} tnCipherPropertyName;
+typedef enum izCipherPropertyName_t {
+	izCipherPropertyAlgorithm,
+	izCipherPropertyMode
+} izCipherPropertyName;
 
 /** @brief Установка параметров в контекст
 *
@@ -112,16 +112,16 @@ typedef enum tnCipherPropertyName_t {
 *	@param[in]		strValue		Идентификатор значения параметра
 *	@return Статус операции
 */
-tnStatus tnEncryptionSetProperty(
-	__inout	tnEncryptionCtx			sCtx, 
-	__in	tnCipherPropertyName	ePropertyKey,
+izStatus izEncryptionSetProperty(
+	__inout	izEncryptionCtx			sCtx, 
+	__in	izCipherPropertyName	ePropertyKey,
 	__in	const char*				strValue);
 
 /** @brief Ключи параметров (Битовые вектора) */
-typedef enum tnCipherPropertyByteVectorName_t {
-	tnCipherPropertyIV,
-	tnCipherPropertyKey
-} tnCipherPropertyByteVectorName;
+typedef enum izCipherPropertyByteVectorName_t {
+	izCipherPropertyIV,
+	izCipherPropertyKey
+} izCipherPropertyByteVectorName;
 
 /** @brief Установка параметров в контекст
 *
@@ -130,13 +130,13 @@ typedef enum tnCipherPropertyByteVectorName_t {
 *	@param[in]		cvValue			Битовый вектор - значение параметра
 *	@return Статус операции
 */
-tnStatus tnEncryptionSetPropertyByteVector(
-	__inout	tnEncryptionCtx					sCtx,
-	__in	tnCipherPropertyByteVectorName	ePropertyKey,
+izStatus izEncryptionSetPropertyByteVector(
+	__inout	izEncryptionCtx					sCtx,
+	__in	izCipherPropertyByteVectorName	ePropertyKey,
 	__in	const void*						cvValue);
 
 /** @brief Поточное шифрование входного блока "cvIn", дополнение последнего блока осуществляться не будет.
-*		Блок будет сохранён и добавлен к следующем вектору полученному из следующего tnEncryptionUpdate().
+*		Блок будет сохранён и добавлен к следующем вектору полученному из следующего izEncryptionUpdate().
 *		Если параметр "vOut"=null, в параметр "psOutSize" будет записан размер массива необходимый для получения выходного значения.
 *		Функция записывает в "psOutSize" фактическое колличество зашифрованных байт.
 * 
@@ -147,8 +147,8 @@ tnStatus tnEncryptionSetPropertyByteVector(
 *	@param[in_out]	psOutSize	Размер выходного вектора (в байтах)
 *	@return Статус операции
 */
-tnStatus tnEncryptionUpdate(
-	__in	tnEncryptionCtx	sCtx,
+izStatus izEncryptionUpdate(
+	__in	izEncryptionCtx	sCtx,
 	__in	const void*		cvIn,
 	__in	size_t			sInSize,
 	__out	void*			vOut,
@@ -165,10 +165,10 @@ tnStatus tnEncryptionUpdate(
 *	@param[in_out]	psOutSize	Размер выходного вектора (в байтах)
 *	@return Статус операции
 */
-tnStatus tnEncryptionFinalUpdate(__in	tnEncryptionCtx sCtx,
+izStatus izEncryptionFinalUpdate(__in	izEncryptionCtx sCtx,
 	__in	const void*	cvIn,
 	__in	size_t		sInSize,
 	__out	void*		vOut,
 	__inout	size_t*		psOutSize);
 
-#endif //!TNCIPHER_H
+#endif //!IZCIPHER_H
