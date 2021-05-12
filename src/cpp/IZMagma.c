@@ -83,7 +83,6 @@ void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 	uint32_t keys[32];
 	generate_keys(key, keys);
 
-	printf("%X %X\n", a1, a0);
 	for (int i = 0; i < 31; ++i) {
 		G32(&a1, &a0, keys[i]);
 		//printf("%X %X\n", a1, a0);
@@ -105,19 +104,9 @@ void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 	a1 = izSwap32(a1);
 	a0 = izSwap32(a0);
 
-	printf("Magma enc in: ");
-	for (int i = 0; i < 8; i++)
-	{
-		printf("%X ", in[i]);
-	}
-	printf("\n");
-
-	printf("%X %X", a1, a0);
-
 	uint32_t keys[32];
 	generate_keys(key, keys);
 
-	printf("%X %X\n", a1, a0);
 	for (int i = 31; i > 0; --i) {
 		G32(&a1, &a0, keys[i]);
 		//printf("%X %X\n", a1, a0);

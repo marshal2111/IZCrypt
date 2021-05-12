@@ -5,13 +5,6 @@ izStatus IZEncryptECB(void (*enc_func) (uint8_t*, uint8_t*, uint8_t*), const uin
 {
 	izStatus status = IZStatusSuccess;
 
-	printf("ECB get: ");
-	for (int i = 0; i < 8; i++)
-	{
-		printf("%X ", in[i]);
-	}
-	printf("\n");
-
 	uint8_t buff[8];
 	uint8_t enc_buff[8];
 	uint8_t num_blocks = (in_size_bytes * 8) / block_size;
