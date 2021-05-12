@@ -4,7 +4,7 @@ IDIR := ../../src/h
 OBJ_DIR := obj
 LIB_DIR := lib
 
-LIB := $(LIB_DIR)/izcrypt.a
+LIB := $(LIB_DIR)/libizcrypt.a
 SRC := $(wildcard $(SRC_DIR)/*.c)
 OBJ := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
 

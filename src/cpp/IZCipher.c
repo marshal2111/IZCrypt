@@ -14,15 +14,16 @@ izStatus izEncrypt(
 	void* vOut,
 	size_t* psOutSize)
 {
+
 	izStatus status = IZStatusSuccess;
-	if (eMode = izIdCipherModeECB) {
+	if (eMode == izIdCipherModeECB) {
 		switch (eAlgorithm)
 		{
 			case izIdCipherAlgorithmMagma:
 				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, 64);
 				break;
 		}
-	}
+	} 
 	return status;
 }
 
@@ -38,7 +39,16 @@ izStatus izDecrypt(
 	void* vOut,
 	size_t* psOutSize)
 {
-	return IZStatusNotSupported;
+	izStatus status = IZStatusSuccess;
+	if (eMode == izIdCipherModeECB) {
+		switch (eAlgorithm)
+		{
+			case izIdCipherAlgorithmMagma:
+				status = IZDecryptECB(&izMagmaDecrypt, cvKey, cvIn, sInSize, vOut, 64);
+				break;
+		}
+	} 
+	return status;
 }
 
 // izStatus izEncryptionCtxInit(

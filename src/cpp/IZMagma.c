@@ -1,5 +1,17 @@
 #include "../h/cipher/IZMagma.h"
 
+const uint8_t p64 [8][16] = {
+			{12, 4, 6, 2, 10, 5, 11, 9, 14, 8, 13, 7, 0, 3, 15, 1} ,
+			{6, 8, 2, 3, 9, 10, 5, 12, 1, 14, 4, 7, 11, 13, 0, 15} , 
+			{11, 3, 5, 8, 2, 15, 10, 13, 14, 1, 7, 4, 12, 9, 6, 0} ,
+			{12, 8, 2, 1, 13, 4, 15, 6, 7, 0, 10, 5, 3, 14, 9, 11} ,
+			{7, 15, 5, 10, 8, 1, 6, 13, 0, 9, 3, 14, 11, 4, 2, 12} ,
+			{5, 13, 15, 6, 9, 2, 12, 10, 11, 7, 8, 1, 4, 3, 14, 0} ,
+			{8, 14, 2, 5, 6, 9, 1, 12, 15, 4, 11, 0, 13, 10, 3, 7} ,
+			{1, 7, 14, 13, 0, 5, 8, 3, 4, 15, 10, 6, 9, 12, 11, 2}
+		};
+
+
 static uint32_t t32(uint32_t a)
 {
 	uint32_t res = 0;
@@ -61,46 +73,71 @@ void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 	uint32_t a1 = 0;
 	uint32_t a0 = 0;
 
+	memcpy(&a1, in + 4, 4);
+	memcpy(&a0, in, 4);
+
+	// printf("Magma get: ");
+	// for (int i = 0; i < 8; i++)
+	// {
+	// 	printf("%X ", in[i]);
+	// }
+	// printf("\n");
+
 	for (int i = 0; i < 4; ++i) {
-		a1 = (a1 << 4) | in[i];
+		a1 = (a1 << 8) | in[i];
 	}
 
 	for (int i = 4; i < 8; ++i) {
-		a0 = (a0 << 4) | in[i];
+		a0 = (a0 << 8) | in[i];
 	}
 
 	uint32_t keys[32];
 	generate_keys(key, keys);
 
+	//printf("%X %X\n", a1, a0);
 	for (int i = 0; i < 31; ++i) {
 		G32(&a1, &a0, keys[i]);
 		//printf("%X %X\n", a1, a0);
 	}
 
-	out = (uint8_t*)(G64_(a1, a0, keys[31])); 
+	uint64_t g64 = G64_(a1, a0, keys[31]);
+	//printf("encrypted: %" PRIx64 "\n", g64);
+	memcpy(out, &g64, 8); 
 }
 
 void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 {
+
+	printf("Magma decrypt get: ");
+	for (int i = 0; i < 8; i++)
+	{
+		printf("%X ", in[i]);
+	}
+	printf("\n");
+
 	uint32_t a1 = 0;
 	uint32_t a0 = 0;
 
 	for (int i = 0; i < 4; ++i) {
-		a1 = (a1 << 4) | in[i];
+		a1 = (a1 << 8) | in[i];
 	}
 
 	for (int i = 4; i < 8; ++i) {
-		a0 = (a0 << 4) | in[i];
+		a0 = (a0 << 8) | in[i];
 	}
 
 	uint32_t keys[32];
 	generate_keys(key, keys);
 
+	printf("%X %X\n", a1, a0);
 	for (int i = 31; i > 0; --i) {
 		G32(&a1, &a0, keys[i]);
-		//printf("%X %X\n", a1, a0);
+		printf("%X %X\n", a1, a0);
 	}
 
-	out = (uint8_t*)(G64_(a1, a0, keys[0]));
+
+	uint64_t g64 = G64_(a1, a0, keys[0]);
+	//printf("encrypted: %" PRIx64 "\n", g64);
+	memcpy(out, &g64, 8);
 }
 

@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <stdio.h>
-#include <inttypes.h>
 
 #ifndef bool
 typedef int bool;
