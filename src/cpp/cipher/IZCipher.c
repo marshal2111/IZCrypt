@@ -8,12 +8,21 @@ izStatus izEncrypt(
 	__in	size_t sInSize,
 	__in	const void* cvKey,
 	__in	size_t sKeySize,
-	__in	const void* cvIv,
-	__in	size_t psIvSize,
+	// __in	const void* cvIv,
+	// __in	size_t psIvSize,
 	__out	void* vOut,
 	__inout	size_t* psOutSize)
 {
-	return IZStatusNotSupported;
+	izStatus_t status = IZStatusSuccess;
+	if (eMode = izIdCipherModeECB) {
+		switch (eAlgorithm)
+		{
+			case izIdCipherAlgorithmMagma:
+				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, 64);
+				break;
+		}
+	}
+	return status;
 }
 
 izStatus izDecrypt(

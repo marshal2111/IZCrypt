@@ -5,7 +5,5 @@
 
 #include "IZStatus.h"
 #include "IZCipher.h"
-#include "IZHash.h"
-#include "IZSign.h"
 
 #endif //!IZCRYPT_H

@@ -6,17 +6,17 @@
 /** @brief Алгоритмы шифрования */
 typedef enum izCipherAlgorithms_t {
 	izIdCipherAlgorithmMagma,
-	izIdCipherAlgorithmKyznechik
+	//izIdCipherAlgorithmKyznechik
 } izCipherAlgorithms;
 
 /** @brief Режимы шифрования */
 typedef enum izCipherMode_t {
 	izIdCipherModeECB,
-	izIdCipherModeCTR,
-	izIdCipherModeOFB,
-	izIdCipherModeCBC,
-	izIdCipherModeCFB,
-	izIdCipherModeMAC
+	// izIdCipherModeCTR,
+	// izIdCipherModeOFB,
+	// izIdCipherModeCBC,
+	// izIdCipherModeCFB,
+	// izIdCipherModeMAC
 } izCipherMode;
 
 /** @brief Шифрование входного битового вектора "vIn" размера "sInSize", 
@@ -45,8 +45,8 @@ izStatus izEncrypt(
 	__in	size_t sInSize,
 	__in	const void* cvKey,
 	__in	size_t sKeySize,
-	__in	const void* cvIv,
-	__in	size_t psIvSize,
+	// __in	const void* cvIv,
+	// __in	size_t psIvSize,
 	__out	void* vOut,
 	__inout	size_t* psOutSize);
 
@@ -75,8 +75,8 @@ izStatus izDecrypt(
 	__in	size_t sInSize,
 	__in	const void* cvKey,
 	__in	size_t sKeySize,
-	__in	const void* cvIv,
-	__in	size_t psIvSize,
+	// __in	const void* cvIv,
+	// __in	size_t psIvSize,
 	__out	void* vOut,
 	__inout	size_t* psOutSize);
 
