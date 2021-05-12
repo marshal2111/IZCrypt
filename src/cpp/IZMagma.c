@@ -35,55 +35,7 @@ static int64_t G64_(uint32_t a1, uint32_t a0, uint32_t k)
 	return res | a0;
 }
 
-void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
-{
-	uint32_t a1 = 0;
-	uint32_t a0 = 0;
-
-	for (int i = 0; i < 4; ++i) {
-		a1 = (a1 << 4) | in[i];
-	}
-
-	for (int i = 4; i < 8; ++i) {
-		a0 = (a0 << 4) | in[i];
-	}
-
-	uint32_t* keys[32];
-	generate_keys(key, keys);
-
-	for (int i = 0; i < 31; ++i) {
-		G32(&a1, &a0, keys[i]);
-		//printf("%X %X\n", a1, a0);
-	}
-
-	out = (uint8_t*) &G64_(a1, a0, keys[31]); 
-}
-
-void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
-{
-	uint32_t a1 = 0;
-	uint32_t a0 = 0;
-
-	for (int i = 0; i < 4; ++i) {
-		a1 = (a1 << 4) | in[i];
-	}
-
-	for (int i = 4; i < 8; ++i) {
-		a0 = (a0 << 4) | in[i];
-	}
-
-	uint32_t* keys[32];
-	generate_keys(key, keys);
-
-	for (int i = 31; i > 0; --i) {
-		G32(&a1, &a0, keys[i]);
-		//printf("%X %X\n", a1, a0);
-	}
-
-	out = (uint8_t*) &G64_(a1, a0, keys[0]);
-}
-
-static generate_keys(uint8_t* key, uint32_t* keys)
+static void generate_keys(uint8_t* key, uint32_t* keys)
 {
 	for (int i = 0; i < 8; ++i) {
 		for (int j = 0; j < 4; ++j) {
@@ -103,3 +55,52 @@ static generate_keys(uint8_t* key, uint32_t* keys)
 	// for (int i = 0; i < 32; ++i) 
 	// 	printf("%i, %X\n", i + 1, keys[i]);
 }
+
+void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
+{
+	uint32_t a1 = 0;
+	uint32_t a0 = 0;
+
+	for (int i = 0; i < 4; ++i) {
+		a1 = (a1 << 4) | in[i];
+	}
+
+	for (int i = 4; i < 8; ++i) {
+		a0 = (a0 << 4) | in[i];
+	}
+
+	uint32_t keys[32];
+	generate_keys(key, keys);
+
+	for (int i = 0; i < 31; ++i) {
+		G32(&a1, &a0, keys[i]);
+		//printf("%X %X\n", a1, a0);
+	}
+
+	out = (uint8_t*)(G64_(a1, a0, keys[31])); 
+}
+
+void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
+{
+	uint32_t a1 = 0;
+	uint32_t a0 = 0;
+
+	for (int i = 0; i < 4; ++i) {
+		a1 = (a1 << 4) | in[i];
+	}
+
+	for (int i = 4; i < 8; ++i) {
+		a0 = (a0 << 4) | in[i];
+	}
+
+	uint32_t keys[32];
+	generate_keys(key, keys);
+
+	for (int i = 31; i > 0; --i) {
+		G32(&a1, &a0, keys[i]);
+		//printf("%X %X\n", a1, a0);
+	}
+
+	out = (uint8_t*)(G64_(a1, a0, keys[0]));
+}
+

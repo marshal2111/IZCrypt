@@ -5,10 +5,10 @@ izStatus IZEncryptECB(void (*enc_func) (uint8_t*, uint8_t*, uint8_t*), const uin
 {
 	izStatus status = IZStatusSuccess;
 
-	uint8_t* buff[8];
-	uint8_t* enc_buff[8];
+	uint8_t buff[8];
+	uint8_t enc_buff[8];
 	uint8_t num_blocks = in_size_bytes / (block_size * 8);
-	for (int i = 0; i < num_blocks) {
+	for (int i = 0; i < num_blocks; i++) {
 		for (int j = 0; j < 8; ++j) {
 			buff[j] = in[j + i * block_size];
 		}
@@ -38,13 +38,13 @@ izStatus IZEncryptECB(void (*enc_func) (uint8_t*, uint8_t*, uint8_t*), const uin
 	return status;
 }
 
-void IZDecryptECB(void (*dec_func) (uint8_t*, uint8_t*, uint8_t*), uint8_t* key, uint8_t* in, 
-	uint8_t* out, uint8_t block_size, uint8_t size_bytes)
+izStatus IZDecryptECB(void (*dec_func) (uint8_t*, uint8_t*, uint8_t*), const uint8_t* key, const uint8_t* in, 
+	size_t in_size_bytes, uint8_t* out, size_t block_size)
 {
-	uint8_t* buff[8];
-	uint8_t* enc_buff[8];
-	uint8_t num_blocks = (size_bytes * 8) / block_size;
-	for (int i = 0; i < num_blocks) {
+	uint8_t buff[8];
+	uint8_t enc_buff[8];
+	uint8_t num_blocks = (in_size_bytes * 8) / block_size;
+	for (int i = 0; i < num_blocks; i++) {
 		for (int j = 0; j < 8; ++j) {
 			buff[j] = in[j + i * block_size];
 		}
