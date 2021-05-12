@@ -1,4 +1,4 @@
-#include "..\h\cipher\IZMagma.h"
+#include "../h/cipher/IZMagma.h"
 
 static uint32_t t32(uint32_t a)
 {

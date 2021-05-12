@@ -2,9 +2,10 @@
 #define SOURCE_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 #ifndef bool
-typedef int bool
+typedef int bool;
 #endif
 #ifndef false
 #define false 0x00

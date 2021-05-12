@@ -32,8 +32,8 @@ izStatus izDecrypt(
 	__in	size_t sInSize,
 	__in	const void* cvKey,
 	__in	size_t sKeySize,
-	__in	const void* cvIv,
-	__in	size_t psIvSize,
+	// __in	const void* cvIv,
+	// __in	size_t psIvSize,
 	__out	void* vOut,
 	__inout	size_t* psOutSize)
 {
