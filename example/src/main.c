@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
 	};
 
 	// 0xfedcba9812343210;
-	// 00010010001101000011001000010000
-	// 11111110110111001011101010011000
+	// 11111110110111001011101010011000   00010010001101000011001000010000
+	// 
 	uint8_t a[8] = {
 		0xfe, 0xdc, 0xba, 0x98,
 		0x76, 0x54, 0x32, 0x10
@@ -37,18 +37,17 @@ int main(int argc, char *argv[])
 	izStatus status;
 
 	status = izEncrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, a, 8, key, 32, enc, outSize);
-	status = izDecrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, enc, 8, key, 32, dec, outSize);
-	//printf("%u\n", UINT32_MAX);
-	//printf("data: %" PRIx64 "\n", enc);
-	printf("encrypted: ");
-	for (int i = 7; i > -1; i--)
+	status = izDecrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, enc, 8, key, 32, dec, outSize);	
+
+	printf("encrypted: "); 
+	for (int i = 0; i < 8; i++)
 	{
 		printf("%X ", enc[i]);
 	}
 	printf("\n");
 
 	printf("decrypted: ");
-	for (int i = 7; i > -1; i--)
+	for (int i = 0; i < 8; i++)
 	{
 		printf("%X ", dec[i]);
 	}

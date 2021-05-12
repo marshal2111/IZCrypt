@@ -1,4 +1,5 @@
 #include "../h/cipher/IZMagma.h"
+#include "../h/cipher/IZSwap.h"
 
 const uint8_t p64 [8][16] = {
 			{12, 4, 6, 2, 10, 5, 11, 9, 14, 8, 13, 7, 0, 3, 15, 1} ,
@@ -70,61 +71,48 @@ static void generate_keys(uint8_t* key, uint32_t* keys)
 
 void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 {
-	uint32_t a1 = 0;
-	uint32_t a0 = 0;
+	uint32_t a1, a0;
 
-	memcpy(&a1, in + 4, 4);
-	memcpy(&a0, in, 4);
+	memcpy(&a0, in + 4, 4);
+	memcpy(&a1, in, 4);
+	// printf("%X %X\n", a1, a0);
 
-	// printf("Magma get: ");
-	// for (int i = 0; i < 8; i++)
-	// {
-	// 	printf("%X ", in[i]);
-	// }
-	// printf("\n");
-
-	for (int i = 0; i < 4; ++i) {
-		a1 = (a1 << 8) | in[i];
-	}
-
-	for (int i = 4; i < 8; ++i) {
-		a0 = (a0 << 8) | in[i];
-	}
+	a1 = izSwap32(a1);
+	a0 = izSwap32(a0);
 
 	uint32_t keys[32];
 	generate_keys(key, keys);
 
-	//printf("%X %X\n", a1, a0);
+	printf("%X %X\n", a1, a0);
 	for (int i = 0; i < 31; ++i) {
 		G32(&a1, &a0, keys[i]);
 		//printf("%X %X\n", a1, a0);
 	}
 
 	uint64_t g64 = G64_(a1, a0, keys[31]);
-	//printf("encrypted: %" PRIx64 "\n", g64);
+	g64 = izSwap64(g64);
+
 	memcpy(out, &g64, 8); 
 }
 
 void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 {
+	uint32_t a1, a0;
 
-	printf("Magma decrypt get: ");
+	memcpy(&a0, in + 4, 4);
+	memcpy(&a1, in, 4);
+
+	a1 = izSwap32(a1);
+	a0 = izSwap32(a0);
+
+	printf("Magma enc in: ");
 	for (int i = 0; i < 8; i++)
 	{
 		printf("%X ", in[i]);
 	}
 	printf("\n");
 
-	uint32_t a1 = 0;
-	uint32_t a0 = 0;
-
-	for (int i = 0; i < 4; ++i) {
-		a1 = (a1 << 8) | in[i];
-	}
-
-	for (int i = 4; i < 8; ++i) {
-		a0 = (a0 << 8) | in[i];
-	}
+	printf("%X %X", a1, a0);
 
 	uint32_t keys[32];
 	generate_keys(key, keys);
@@ -132,11 +120,12 @@ void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 	printf("%X %X\n", a1, a0);
 	for (int i = 31; i > 0; --i) {
 		G32(&a1, &a0, keys[i]);
-		printf("%X %X\n", a1, a0);
+		//printf("%X %X\n", a1, a0);
 	}
 
 
 	uint64_t g64 = G64_(a1, a0, keys[0]);
+	g64 = izSwap64(g64);
 	//printf("encrypted: %" PRIx64 "\n", g64);
 	memcpy(out, &g64, 8);
 }
