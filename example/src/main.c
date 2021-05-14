@@ -35,10 +35,10 @@ int main(int argc, char *argv[])
 	uint8_t enc[ivSize];
 	uint8_t dec[ivSize];
 	size_t outSize = 0;
-	izStatus status;
+	izStatus status;	
 
 	status = izEncrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, a, ivSize, key, 32, enc, &outSize);
-	printf("Out size: %ld\n", outSize);
+	printf("status: %d\n", (uint8_t)status);
 	status = izDecrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, enc, outSize, key, 32, dec, outSize);	
 
 	printf("encrypted: "); 
