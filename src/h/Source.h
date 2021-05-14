@@ -17,6 +17,8 @@ typedef int bool;
 #define true !false
 #endif
 #define MAGMA_BLOCK_SIZE 8
+#define DEFAULT_FIRST_PARAM 8
+#define DEFAULT_SECOND_PARAM 8
 
 
 #endif //!SOURCE_H

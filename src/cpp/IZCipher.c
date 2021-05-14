@@ -9,8 +9,10 @@ izStatus izEncrypt(
 	size_t sInSize,
 	const void* cvKey,
 	size_t sKeySize,
-	// __in	const void* cvIv,
-	// __in	size_t psIvSize,
+	const void* cvIv,
+	size_t psIvSize,
+	uint16_t FirstParam,
+	uint16_t SecondParam,
 	void* vOut,
 	size_t* psOutSize)
 {
@@ -22,16 +24,35 @@ izStatus izEncrypt(
 		return status;
 	}
 
-	if (eMode == izIdCipherModeECB) {
-		switch (eAlgorithm)
-		{
-			case izIdCipherAlgorithmMagma:
-				if (sKeySize != 32) {
-					return IZStatusInvalidParameter;
-				}
-				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, 8);
-				break;
-		}
+	switch (eMode) 
+	{
+		case izIdCipherModeECB:
+			switch (eAlgorithm)
+			{
+				case izIdCipherAlgorithmMagma:
+					if (sKeySize != 32) {
+						return IZStatusInvalidParameter;
+					}
+					status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, MAGMA_BLOCK_SIZE);
+					break;
+				case izIdCipherAlgorithmKyznechik:
+					return IZStatusNotSupported;
+			}
+			break;
+		case izIdCipherModeCTR:
+			switch (eAlgorithm)
+			{
+				case izIdCipherAlgorithmMagma:
+					if (sKeySize != 32) {
+						return IZStatusInvalidParameter;
+					}
+					status = IZEncryptCTR(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, MAGMA_BLOCK_SIZE, 8);
+					break;
+				case izIdCipherAlgorithmKyznechik:
+					return IZStatusNotSupported;
+			}
+			break;
+
 	} 
 	return status;
 }
@@ -43,8 +64,10 @@ izStatus izDecrypt(
 	size_t sInSize,
 	const void* cvKey,
 	size_t sKeySize,
-	// __in	const void* cvIv,
-	// __in	size_t psIvSize,
+	const void* cvIv,
+	size_t psIvSize,
+	uint16_t FirstParam,
+	uint16_t SecondParam,
 	void* vOut,
 	size_t* psOutSize)
 {

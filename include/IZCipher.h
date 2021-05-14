@@ -8,13 +8,13 @@
 /** @brief Алгоритмы шифрования */
 typedef enum izCipherAlgorithms_t {
 	izIdCipherAlgorithmMagma,
-	//izIdCipherAlgorithmKyznechik
+	izIdCipherAlgorithmKyznechik
 } izCipherAlgorithms;
 
 /** @brief Режимы шифрования */
 typedef enum izCipherMode_t {
 	izIdCipherModeECB,
-	// izIdCipherModeCTR,
+	izIdCipherModeCTR,
 	// izIdCipherModeOFB,
 	// izIdCipherModeCBC,
 	// izIdCipherModeCFB,
@@ -36,6 +36,8 @@ typedef enum izCipherMode_t {
 *	@param[in]		sKeySize	Размер ключевого вектора (в байтах)
 *	@param[in]		cvIv		Битовый вектор с вектором инициализации
 *	@param[in]		psIvSize	Размер вектора инициализации (в байтах)
+*	@param[in]		FirstParam	Первый параметр режима шифрования (если необходим)
+*	@param[in]		SecondParam	Второй параметр режима шифрования (если необходим)
 *	@param[out]		vOut		Выходной битовый вектор
 *	@param[in_out]	psOutSize	Размер выходного вектора (в байтах)
 *	@return Статус операции
@@ -47,8 +49,10 @@ izStatus izEncrypt(
 	size_t sInSize,
 	const void* cvKey,
 	size_t sKeySize,
-	// const void* cvIv,
-	// size_t psIvSize,
+	const void* cvIv,
+	uint16_t FirstParam,
+	uint16_t SecondParam,
+	size_t psIvSize,
 	void* vOut,
 	size_t* psOutSize);
 
@@ -77,8 +81,8 @@ izStatus izDecrypt(
 	size_t sInSize,
 	const void* cvKey,
 	size_t sKeySize,
-	// _In_	const void* cvIv,
-	// _In_	size_t psIvSize,
+	const void* cvIv,
+	size_t psIvSize,
 	void* vOut,
 	size_t* psOutSize);
 
