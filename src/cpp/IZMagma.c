@@ -13,7 +13,7 @@ const uint8_t izMagmaSbox [8][16] = {
 		};
 
 
-static uint32_t t32(uint32_t a)
+static uint32_t izT32(uint32_t a)
 {
 	uint32_t res = 0;
 	
@@ -25,30 +25,30 @@ static uint32_t t32(uint32_t a)
 	return res;
 }	
 
-static uint32_t cycle_shift(uint32_t a, uint8_t offset)
+static uint32_t izCycleShift(uint32_t a, uint8_t offset)
 {
 	return (a << offset) | (a >> (32 - offset));
 }
 
-static uint32_t g32(uint32_t k, uint32_t a)
+static uint32_t izG32(uint32_t k, uint32_t a)
 {
-	return cycle_shift(t32(a + k), 11);
+	return izCycleShift(izT32(a + k), 11);
 }
 
-static void G32(uint32_t* a1, uint32_t* a0, uint32_t k)
+static void izG32_(uint32_t* a1, uint32_t* a0, uint32_t k)
 {
 	uint32_t a = *a1;
 	*a1 = *a0;
-	*a0 = g32(k, *a0) ^ a;
+	*a0 = izG32(k, *a0) ^ a;
 }
 
-static int64_t G64_(uint32_t a1, uint32_t a0, uint32_t k)
+static int64_t izG64_(uint32_t a1, uint32_t a0, uint32_t k)
 {
-	uint64_t res = ((uint64_t)(g32(k, a0) ^ a1)) << 32;
+	uint64_t res = ((uint64_t)(izG32(k, a0) ^ a1)) << 32;
 	return res | a0;
 }
 
-static void generate_keys(uint8_t* key, uint32_t* keys)
+static void izGenerateKeys(uint8_t* key, uint32_t* keys)
 {
 	for (int i = 0; i < 8; ++i) {
 		for (int j = 0; j < 4; ++j) {
@@ -81,14 +81,14 @@ void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 	a0 = izSwap32(a0);
 
 	uint32_t keys[32];
-	generate_keys(key, keys);
+	izGenerateKeys(key, keys);
 
 	for (int i = 0; i < 31; ++i) {
-		G32(&a1, &a0, keys[i]);
+		izG32_(&a1, &a0, keys[i]);
 		//printf("%X %X\n", a1, a0);
 	}
 
-	uint64_t g64 = G64_(a1, a0, keys[31]);
+	uint64_t g64 = izG64_(a1, a0, keys[31]);
 	g64 = izSwap64(g64);
 
 	memcpy_s(out, &g64, 8); 
@@ -105,15 +105,15 @@ void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 	a0 = izSwap32(a0);
 
 	uint32_t keys[32];
-	generate_keys(key, keys);
+	izGenerateKeys(key, keys);
 
 	for (int i = 31; i > 0; --i) {
-		G32(&a1, &a0, keys[i]);
+		izG32_(&a1, &a0, keys[i]);
 		//printf("%X %X\n", a1, a0);
 	}
 
 
-	uint64_t g64 = G64_(a1, a0, keys[0]);
+	uint64_t g64 = izG64_(a1, a0, keys[0]);
 	g64 = izSwap64(g64);
 	//printf("encrypted: %" PRIx64 "\n", g64);
 	memcpy(out, &g64, 8);
