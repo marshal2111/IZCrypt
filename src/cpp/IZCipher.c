@@ -14,13 +14,21 @@ izStatus izEncrypt(
 	void* vOut,
 	size_t* psOutSize)
 {
-	
 	izStatus status = IZStatusSuccess;
+	if ((cvIn == NULL) || (sInSize = 0) || 
+		(cvKey == NULL) || (sKeySize == 0) || (vOut == NULL) || (psOutSize == NULL)) {
+		status = IZStatusInvalidParameter;
+		return status;
+	}
+	
 	if (eMode == izIdCipherModeECB) {
 		switch (eAlgorithm)
 		{
 			case izIdCipherAlgorithmMagma:
-				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, 8);
+				if (sKeySize != 32) {
+					return IZStatusInvalidParameter;
+				}
+				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, MAGMA_BLOCK_SIZE);
 				break;
 		}
 	} 
@@ -44,7 +52,7 @@ izStatus izDecrypt(
 		switch (eAlgorithm)
 		{
 			case izIdCipherAlgorithmMagma:
-				status = IZDecryptECB(&izMagmaDecrypt, cvKey, cvIn, sInSize, vOut, 8);
+				status = IZDecryptECB(&izMagmaDecrypt, cvKey, cvIn, sInSize, vOut, MAGMA_BLOCK_SIZE);
 				break;
 		}
 	} 

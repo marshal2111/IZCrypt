@@ -33,7 +33,7 @@ izStatus IZDecryptECB(void (*DecFunc) (uint8_t*, uint8_t*, uint8_t*), const uint
 	size_t sInSize, uint8_t* vOut, size_t sBlockSize)
 {
 	uint8_t numBlocks = sInSize / sBlockSize;
-	
+
 	for (int i = 0; i < numBlocks; i++) {
 		DecFunc(vKey, vIn + i * sBlockSize, vOut + i * sBlockSize);
 	}

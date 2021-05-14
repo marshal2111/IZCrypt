@@ -4,7 +4,6 @@
 #include <inttypes.h>
 #include <stddef.h>
 #include "IZStatus.h"
-// #include "../src/h/cipher/IZCipher_p.h"
 
 /** @brief Алгоритмы шифрования */
 typedef enum izCipherAlgorithms_t {

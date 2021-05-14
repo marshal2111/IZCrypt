@@ -16,6 +16,7 @@ typedef int bool;
 #ifndef true
 #define true !false
 #endif
+#define MAGMA_BLOCK_SIZE 8
 
 
 #endif //!SOURCE_H
