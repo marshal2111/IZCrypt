@@ -15,39 +15,40 @@ int main(int argc, char *argv[])
 		0xfc, 0xfd, 0xfe, 0xff
 
 	};
-
-	// 0xfedcba9812343210;
-	// 11111110110111001011101010011000   00010010001101000011001000010000
-	// 
-	uint8_t a[8] = {
+	
+	const uint8_t ivSize = 19;
+	const uint8_t a[19] = {
 		0xfe, 0xdc, 0xba, 0x98,
-		0x76, 0x54, 0x32, 0x10
+		0x76, 0x54, 0x32, 0x10,
+		0xfe, 0xdc, 0xba, 0x98,
+		0x76, 0x54, 0x32, 0x10,
+		0x54, 0x32, 0x10
 	};
 
-	printf("A:");
-	for (int i = 0; i < 8; i++)
+	printf("Vector value: ");
+	for (int i = 0; i < ivSize; i++)
 	{
 		printf("%X ", a[i]);
 	}
 	printf("\n");
 
-	uint8_t enc[8];
-	uint8_t dec[8];
-	size_t* outSize;
+	uint8_t enc[ivSize];
+	uint8_t dec[ivSize];
+	size_t outSize = 0;
 	izStatus status;
 
-	status = izEncrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, a, 8, key, 32, enc, outSize);
-	status = izDecrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, enc, 8, key, 32, dec, outSize);	
+	status = izEncrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, a, ivSize, key, 32, enc, &outSize);
+	status = izDecrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, enc, outSize, key, 32, dec, outSize);	
 
 	printf("encrypted: "); 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < ivSize; i++)
 	{
 		printf("%X ", enc[i]);
 	}
 	printf("\n");
 
 	printf("decrypted: ");
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < ivSize; i++)
 	{
 		printf("%X ", dec[i]);
 	}
