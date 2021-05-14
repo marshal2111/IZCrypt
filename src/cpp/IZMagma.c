@@ -1,7 +1,7 @@
 #include "../h/cipher/IZMagma.h"
 #include "../h/cipher/IZSwap.h"
 
-const uint8_t p64 [8][16] = {
+const uint8_t izMagmaSbox [8][16] = {
 			{12, 4, 6, 2, 10, 5, 11, 9, 14, 8, 13, 7, 0, 3, 15, 1} ,
 			{6, 8, 2, 3, 9, 10, 5, 12, 1, 14, 4, 7, 11, 13, 0, 15} , 
 			{11, 3, 5, 8, 2, 15, 10, 13, 14, 1, 7, 4, 12, 9, 6, 0} ,
@@ -18,7 +18,7 @@ static uint32_t t32(uint32_t a)
 	uint32_t res = 0;
 	
 	for (uint32_t i = 0; i < 8; ++i) {
-		res = (res << 4) | p64[7 - i][(a >> (28 - i * 4)) & 0xF];
+		res = (res << 4) | izMagmaSbox[7 - i][(a >> (28 - i * 4)) & 0xF];
 		//printf("%u\n", res);
 	} 
 	
@@ -91,7 +91,7 @@ void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 	uint64_t g64 = G64_(a1, a0, keys[31]);
 	g64 = izSwap64(g64);
 
-	memcpy(out, &g64, 8); 
+	memcpy_s(out, &g64, 8); 
 }
 
 void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)

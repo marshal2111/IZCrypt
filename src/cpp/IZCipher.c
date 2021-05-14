@@ -14,7 +14,7 @@ izStatus izEncrypt(
 	void* vOut,
 	size_t* psOutSize)
 {
-
+	
 	izStatus status = IZStatusSuccess;
 	if (eMode == izIdCipherModeECB) {
 		switch (eAlgorithm)

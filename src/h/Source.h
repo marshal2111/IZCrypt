@@ -1,10 +1,14 @@
 #ifndef SOURCE_H
 #define SOURCE_H
 
+#define __STDC_WANT_LIB_EXT1__ 1
+
 #include <stdint.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <memory.h>
+#include <string.h>	
 
 #ifndef bool
 typedef int bool;
