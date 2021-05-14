@@ -31,4 +31,7 @@
 *.out
 *.app
 
+# Bin directories
+*/bin/*
+
 build/Win/Crypto/.vs/*
