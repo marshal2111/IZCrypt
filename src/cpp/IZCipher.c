@@ -20,7 +20,7 @@ izStatus izEncrypt(
 		switch (eAlgorithm)
 		{
 			case izIdCipherAlgorithmMagma:
-				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, 64);
+				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, 64);
 				break;
 		}
 	} 

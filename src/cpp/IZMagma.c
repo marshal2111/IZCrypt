@@ -19,7 +19,6 @@ static uint32_t izT32(uint32_t a)
 	
 	for (uint32_t i = 0; i < 8; ++i) {
 		res = (res << 4) | izMagmaSbox[7 - i][(a >> (28 - i * 4)) & 0xF];
-		//printf("%u\n", res);
 	} 
 	
 	return res;
@@ -54,7 +53,6 @@ static void izGenerateKeys(uint8_t* key, uint32_t* keys)
 		for (int j = 0; j < 4; ++j) {
 			keys[i] = (keys[i] << 8) | key[j + 4 * i];
 		}
-		// printf("%X\n", keys[i]);
 	}
 
 	for (int i = 8; i < 16; ++i)
@@ -65,8 +63,6 @@ static void izGenerateKeys(uint8_t* key, uint32_t* keys)
 
 	for (int i = 24; i < 32; ++i)
 		keys[i] = keys[47 - i];
-	// for (int i = 0; i < 32; ++i) 
-	// 	printf("%i, %X\n", i + 1, keys[i]);
 }
 
 void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
@@ -75,7 +71,6 @@ void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 
 	memcpy(&a0, in + 4, 4);
 	memcpy(&a1, in, 4);
-	// printf("%X %X\n", a1, a0);
 
 	a1 = izSwap32(a1);
 	a0 = izSwap32(a0);
@@ -85,13 +80,12 @@ void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 
 	for (int i = 0; i < 31; ++i) {
 		izG32_(&a1, &a0, keys[i]);
-		//printf("%X %X\n", a1, a0);
 	}
 
 	uint64_t g64 = izG64_(a1, a0, keys[31]);
 	g64 = izSwap64(g64);
 
-	memcpy_s(out, &g64, 8); 
+	memcpy(out, &g64, 8); 
 }
 
 void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
@@ -109,13 +103,11 @@ void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 
 	for (int i = 31; i > 0; --i) {
 		izG32_(&a1, &a0, keys[i]);
-		//printf("%X %X\n", a1, a0);
 	}
 
 
 	uint64_t g64 = izG64_(a1, a0, keys[0]);
 	g64 = izSwap64(g64);
-	//printf("encrypted: %" PRIx64 "\n", g64);
 	memcpy(out, &g64, 8);
 }
 
