@@ -20,7 +20,7 @@ izStatus izEncrypt(
 		switch (eAlgorithm)
 		{
 			case izIdCipherAlgorithmMagma:
-				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, 64);
+				status = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, 8);
 				break;
 		}
 	} 
@@ -44,7 +44,7 @@ izStatus izDecrypt(
 		switch (eAlgorithm)
 		{
 			case izIdCipherAlgorithmMagma:
-				status = IZDecryptECB(&izMagmaDecrypt, cvKey, cvIn, sInSize, vOut, 64);
+				status = IZDecryptECB(&izMagmaDecrypt, cvKey, cvIn, sInSize, vOut, 8);
 				break;
 		}
 	} 
