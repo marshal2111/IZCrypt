@@ -6,7 +6,7 @@ EXE := $(BIN_DIR)/main
 SRC := $(wildcard $(SRC_DIR)/*.c)
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-CPPFLAGS := -Iinclude/IZCrypt -MMD -MP
+CPPFLAGS := -Iinclude -MMD -MP
 CFLAGS   := -Wall
 LDFLAGS  := -L../build/Linux/lib
 LDLIBS   := -lizcrypt
