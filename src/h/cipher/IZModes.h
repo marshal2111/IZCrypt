@@ -20,7 +20,7 @@ izStatus IZDecryptECB(
 	uint8_t* vOut, 
 	size_t sBlockSize);
 
-izStatus IZEncryptCTR(
+izStatus IZEncryptDecryptCTR(
 	void (*EncFunc) (uint8_t*, uint8_t*, uint8_t*), 
 	const uint8_t* vKey, 
 	const uint8_t* vIn, 
@@ -29,8 +29,10 @@ izStatus IZEncryptCTR(
 	size_t* psOutSize, 
 	size_t sBlockSize, 
 	const uint8_t* vIv, 
-	size_t sIvSize
+	size_t sIvSize,
 	uint16_t FirstParam);
+
+void izAddCTR8(uint8_t* uCTR, size_t sIvSize);
 
 void IZPaddingX80(const uint8_t* vIn, 
 	size_t sInSize, 
