@@ -7,8 +7,8 @@ SRC := $(wildcard $(SRC_DIR)/*.c)
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 CPPFLAGS := -Iinclude -MMD -MP
-CFLAGS   := -Wall
-LDFLAGS  := -L../build/Linux/lib
+CFLAGS   := -Wall -g
+LDFLAGS  := -L../build/Linux/lib 
 LDLIBS   := -lizcrypt
 
 .PHONY: all clean
