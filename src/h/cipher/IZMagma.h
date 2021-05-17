@@ -22,7 +22,7 @@
 *	@param[out]	out		64-x битный блок на выход
 *	@return Статус операции
 */
-void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out); //TODO return status
+void izMagmaEncrypt(uint8_t* key, const uint8_t* in, uint8_t* out); //TODO return status
 
 /** @brief Расшифрование одного блока алгоримом Магма 34.12-2015 n = 64
 *
@@ -31,6 +31,6 @@ void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out); //TODO return stat
 *	@param[out]	out		64-x битный блок на выход
 *	@return Статус операции
 */
-void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out);
+void izMagmaDecrypt(uint8_t* key, const uint8_t* in, uint8_t* out);
 
 #endif //!IZMAGMA_H

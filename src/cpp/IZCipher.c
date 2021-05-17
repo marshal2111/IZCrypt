@@ -90,7 +90,7 @@ izStatus izDecrypt(
 					if (sKeySize != 32) {
 						return IZStatusInvalidParameter;
 					}
-					sStatus = IZDecryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, MAGMA_BLOCK_SIZE);
+					sStatus = IZDecryptECB(&izMagmaDecrypt, cvKey, cvIn, sInSize, vOut, psOutSize, MAGMA_BLOCK_SIZE);
 					break;
 				case izIdCipherAlgorithmKyznechik:
 					return IZStatusNotSupported;

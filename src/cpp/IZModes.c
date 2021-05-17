@@ -3,7 +3,7 @@
 #include "../h/cipher/IZMagma.h"
 
 izStatus IZEncryptECB(
-	void (*EncFunc) (uint8_t*, uint8_t*, uint8_t*), 
+	void (*EncFunc) (uint8_t*, const uint8_t*, uint8_t*), 
 	const uint8_t* vKey, 
 	const uint8_t* vIn, 
 	size_t sInSize, 
@@ -20,29 +20,26 @@ izStatus IZEncryptECB(
 		EncFunc(vKey, vIn + i * sBlockSize, vOut + i * sBlockSize);
 	}
 
-	sOutSize = numBlocks * sBlockSize;
+	uint8_t r_Bytes = sInSize % sBlockSize;
+	uint8_t vPaddingBuff[sBlockSize];
 
-	//Padding 
-	uint8_t r_bytes = sInSize % sBlockSize;
+	IZPaddingX80(vIn + sBlockSize * numBlocks, vPaddingBuff, sBlockSize, r_Bytes);
+	EncFunc(vKey, vPaddingBuff, vOut + sBlockSize * numBlocks);
 
-	if (r_bytes != 0) {
-		uint8_t buff[sBlockSize];
-		IZPaddingX80(vIn, sInSize, buff, sBlockSize, numBlocks, r_bytes);
-		EncFunc(vKey, buff, vOut + sBlockSize * numBlocks);
-		sOutSize += sBlockSize;
-	 }
+	sOutSize = (numBlocks + 1) * sBlockSize;
 
-	 *psOutSize = sOutSize;
+	*psOutSize = sOutSize;
 
 	return status;
 }
 
 izStatus IZDecryptECB(
-	void (*DecFunc) (uint8_t*, uint8_t*, uint8_t*), 
+	void (*DecFunc) (uint8_t*, const uint8_t*, uint8_t*), 
 	const uint8_t* vKey, 
 	const uint8_t* vIn, 
 	size_t sInSize, 
 	uint8_t* vOut, 
+	size_t* psOutSize, 
 	size_t sBlockSize)
 {
 	uint8_t numBlocks = sInSize / sBlockSize;
@@ -51,10 +48,15 @@ izStatus IZDecryptECB(
 		DecFunc(vKey, vIn + i * sBlockSize, vOut + i * sBlockSize);
 	}
 
+	uint8_t i = 0;
+	while (vOut[numBlocks * sBlockSize - i] != 0x80) { i++; }
+
+	*psOutSize = sInSize - i;
+
 }
 
 izStatus IZEncryptDecryptCTR(
-	void (*EncFunc) (uint8_t*, uint8_t*, uint8_t*), 
+	void (*EncFunc) (uint8_t*, const uint8_t*, uint8_t*), 
 	const uint8_t* vKey, 
 	const uint8_t* vIn, 
 	size_t sInSize, 
@@ -104,7 +106,7 @@ izStatus IZEncryptDecryptCTR(
 }	
 
 
-void izAddCTR8(uint8_t* uCTR, size_t sIvSize)
+static void izAddCTR8(uint8_t* uCTR, size_t sIvSize)
 {
 	uint64_t uBuffer = 0;
 
@@ -116,15 +118,13 @@ void izAddCTR8(uint8_t* uCTR, size_t sIvSize)
 }
 
 
-void IZPaddingX80(
+static void IZPaddingX80(
 	const uint8_t* vIn, 
-	size_t sInSize,
 	uint8_t* vOut, 
 	size_t sBlockSize, 
-	int numBlocks,
 	int r_bytes) 
 {
-	memcpy(vOut, vIn + sBlockSize * numBlocks, r_bytes);
+	memcpy(vOut, vIn, r_bytes);
 	vOut[r_bytes] = 0x80; // дополняем байтом 10000000
 	for (int i = r_bytes + 1; i < sBlockSize; ++i) {
 		vOut[i] = 0x00; // дополняем байтами 00000000

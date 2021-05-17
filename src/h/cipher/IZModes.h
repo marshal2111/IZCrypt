@@ -4,7 +4,7 @@
 #include "../../../include/IZCrypt.h"
 #include "../Source.h"
 
-izStatus IZEncryptECB(void (*EncFunc) (uint8_t*, uint8_t*, uint8_t*), 
+izStatus IZEncryptECB(void (*EncFunc) (uint8_t*, const uint8_t*, uint8_t*), 
 	const uint8_t* vKey, 
 	const uint8_t* vIn, 
 	size_t sInSize, 
@@ -13,15 +13,16 @@ izStatus IZEncryptECB(void (*EncFunc) (uint8_t*, uint8_t*, uint8_t*),
 	size_t sBlockSize);
 
 izStatus IZDecryptECB(
-	void (*DecFunc) (uint8_t*, uint8_t*, uint8_t*), 
+	void (*DecFunc) (uint8_t*, const uint8_t*, uint8_t*), 
 	const uint8_t* vKey, 
 	const uint8_t* vIn, 
 	size_t sInSize, 
 	uint8_t* vOut, 
+	size_t* psOutSize, 
 	size_t sBlockSize);
 
 izStatus IZEncryptDecryptCTR(
-	void (*EncFunc) (uint8_t*, uint8_t*, uint8_t*), 
+	void (*EncFunc) (uint8_t*, const uint8_t*, uint8_t*), 
 	const uint8_t* vKey, 
 	const uint8_t* vIn, 
 	size_t sInSize, 
@@ -32,13 +33,12 @@ izStatus IZEncryptDecryptCTR(
 	size_t sIvSize,
 	uint16_t FirstParam);
 
-void izAddCTR8(uint8_t* uCTR, size_t sIvSize);
+static void izAddCTR8(uint8_t* uCTR, size_t sIvSize);
 
-void IZPaddingX80(const uint8_t* vIn, 
-	size_t sInSize, 
+static void IZPaddingX80(
+	const uint8_t* vIn, 
 	uint8_t* vOut, 
 	size_t sBlockSize, 
-	int numBlocks,
 	int r_bytes);
 
 #endif

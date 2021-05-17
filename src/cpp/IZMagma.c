@@ -65,7 +65,7 @@ static void izGenerateKeys(uint8_t* key, uint32_t* keys)
 		keys[i] = keys[47 - i];
 }
 
-void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
+void izMagmaEncrypt(uint8_t* key, const uint8_t* in, uint8_t* out)
 {
 	uint32_t a1, a0;
 
@@ -88,7 +88,7 @@ void izMagmaEncrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 	memcpy(out, &g64, 8); 
 }
 
-void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
+void izMagmaDecrypt(uint8_t* key, const uint8_t* in, uint8_t* out)
 {
 	uint32_t a1, a0;
 
@@ -105,8 +105,8 @@ void izMagmaDecrypt(uint8_t* key, uint8_t* in, uint8_t* out)
 		izG32_(&a1, &a0, keys[i]);
 	}
 
-
 	uint64_t g64 = izG64_(a1, a0, keys[0]);
+
 	g64 = izSwap64(g64);
 	memcpy(out, &g64, 8);
 }
