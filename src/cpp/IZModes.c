@@ -11,7 +11,7 @@ izStatus IZEncryptECB(
 	size_t* psOutSize, 
 	size_t sBlockSize)
 {
-	izStatus status = IZStatusSuccess;
+	izStatus sStatus = IZStatusSuccess;	
 
 	size_t sOutSize = 0; 
 	uint8_t numBlocks = sInSize / sBlockSize;
@@ -30,7 +30,7 @@ izStatus IZEncryptECB(
 
 	*psOutSize = sOutSize;
 
-	return status;
+	return sStatus;
 }
 
 izStatus IZDecryptECB(
@@ -42,6 +42,8 @@ izStatus IZDecryptECB(
 	size_t* psOutSize, 
 	size_t sBlockSize)
 {
+	izStatus sStatus = IZStatusSuccess;	
+
 	uint8_t numBlocks = sInSize / sBlockSize;
 
 	for (int i = 0; i < numBlocks; i++) {
@@ -52,6 +54,8 @@ izStatus IZDecryptECB(
 	while (vOut[numBlocks * sBlockSize - i] != 0x80) { i++; }
 
 	*psOutSize = sInSize - i;
+
+	return sStatus;
 
 }
 
@@ -94,7 +98,7 @@ izStatus IZEncryptDecryptCTR(
 			vOut[j + i * uS] = uEncryptedCTR[sIvSize * 2 - uS + j] ^ vIn[i * uS + j];
 		}
 		izAddCTR8(uCTR, sIvSize); 
-	}
+	}	
 	EncFunc(vKey, uCTR, uEncryptedCTR);	
 	for (int j = 0; j < r_bytes; ++j) {
 			vOut[j + numBlocks * uS] = uEncryptedCTR[sIvSize * 2 - r_bytes + j] ^ vIn[numBlocks * uS + j];
