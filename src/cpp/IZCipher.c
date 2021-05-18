@@ -1,5 +1,4 @@
 #include "../../include/IZCipher.h"
-#include "../h/cipher/IZCipher_p.h"
 #include "../h/cipher/IZMagma.h"
 #include "../h/cipher/IZModes.h"
 
@@ -24,7 +23,7 @@ izStatus izEncrypt(
 		sStatus = IZStatusInvalidParameter;
 		return sStatus;
 	}
-
+	
 	switch (eMode) 
 	{
 		case izIdCipherModeECB:
@@ -34,6 +33,7 @@ izStatus izEncrypt(
 					if (sKeySize != 32) {
 						return IZStatusInvalidParameter;
 					}
+
 					sStatus = IZEncryptECB(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, MAGMA_BLOCK_SIZE);
 					break;
 				case izIdCipherAlgorithmKyznechik:
