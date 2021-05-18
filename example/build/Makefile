@@ -8,7 +8,7 @@ OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 CPPFLAGS := -I../include -MMD -MP
 CFLAGS   := -Wall -g
-LDFLAGS  := -L../lib 
+LDFLAGS  := -L../../build/Linux/lib 
 LDLIBS   := -lizcrypt
 
 .PHONY: all clean
