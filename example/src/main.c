@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 
 int main(int argc, char *argv[])
 {
@@ -33,21 +34,30 @@ int main(int argc, char *argv[])
 	fread(vIn, 1, FileSize, fp);
 	/*******************************/
 
-	/***Данные инициализации для CTR***/
+	/***Инициализация парамтеров***/
 	const uint8_t uIv[4] = {
 		0x12, 0x34, 0x56, 0x78
 	};
 	size_t sIvSize = 4;
 	uint8_t uS = 8;
-	/*********************************/
-
-	uint8_t* enc = malloc((FileSize + 1) * sizeof(uint8_t));	
 	size_t outSize = 0;
-	izStatus status;	
-
-	/***Зашифрование данных***/
-	status = izEncrypt(izIdCipherAlgorithmMagma, izIdCipherModeCTR, vIn, FileSize, key, 32, uIv, sIvSize, uS, 0, enc, &outSize);
+	izStatus status;
+	/******************************/
 	
+		
+	/***Зашифрование данных***/
+	uint8_t* enc = malloc((FileSize + 1) * sizeof(uint8_t));
+
+	struct timeval begin, end;
+    gettimeofday(&begin, 0);
+
+	status = izEncrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, vIn, FileSize, key, 32, uIv, sIvSize, uS, 0, enc, &outSize);
+
+	gettimeofday(&end, 0);
+    long seconds = end.tv_sec - begin.tv_sec;
+    long microseconds = end.tv_usec - begin.tv_usec;
+    double elapsed = seconds + microseconds*1e-6;
+
 	printf("Status of encryption: %d\n", (uint8_t)status);
 	
 	if (status != IZStatusSuccess) {
@@ -57,15 +67,27 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	printf("Time of encryption: %.3f seconds.\n", elapsed);
+
 	fp = fopen("../src/picture_encrypted", "w");
 	fwrite(enc, 1, outSize, fp);
 	fclose(fp);
 	/*************************/
 
-	uint8_t* dec = malloc(outSize * sizeof(uint8_t));
 
 	/***Расшифрование данных***/
-	status = izDecrypt(izIdCipherAlgorithmMagma, izIdCipherModeCTR, enc, outSize, key, 32, uIv, sIvSize, uS, 0, dec, &outSize);	
+	uint8_t* dec = malloc(outSize * sizeof(uint8_t));
+
+	gettimeofday(&begin, 0);
+
+	status = izDecrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, enc, outSize, key, 32, uIv, sIvSize, uS, 0, dec, &outSize);	
+
+	gettimeofday(&end, 0);
+	seconds = end.tv_sec - begin.tv_sec;
+    microseconds = end.tv_usec - begin.tv_usec;
+    elapsed = seconds + microseconds*1e-6;
+
+    printf("Status of decryption: %d\n", (uint8_t)status);
 
 	if (status != IZStatusSuccess) {
 		printf("DECRYPTION FAILED\n");
@@ -75,7 +97,8 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	printf("Status of decryption: %d\n", (uint8_t)status);
+	printf("Time of decryption: %.3f seconds.\n", elapsed);
+
 	fp = fopen("../src/picture_decrypted.jpg", "w");
 	fwrite(dec, 1, outSize, fp);
 	fclose(fp);
