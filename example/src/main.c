@@ -21,11 +21,11 @@ int main(int argc, char *argv[])
 	FILE* fp = fopen("../src/picture.jpg", "r");
 
 	if (fp == NULL) {
-        printf("File Not Found!\n");
-        return -1;
-    }
+		printf("File Not Found!\n");
+		return -1;
+	}
 
-    /***Считываем данные из файла***/
+	/***Считываем данные из файла***/
 	fseek(fp, 0L, SEEK_END);
 	long int FileSize = ftell(fp);
 	rewind(fp);
@@ -49,14 +49,14 @@ int main(int argc, char *argv[])
 	uint8_t* enc = malloc((FileSize + 1) * sizeof(uint8_t));
 
 	struct timeval begin, end;
-    gettimeofday(&begin, 0);
+	gettimeofday(&begin, 0);
 
 	status = izEncrypt(izIdCipherAlgorithmMagma, izIdCipherModeECB, vIn, FileSize, key, 32, uIv, sIvSize, uS, 0, enc, &outSize);
 
 	gettimeofday(&end, 0);
-    long seconds = end.tv_sec - begin.tv_sec;
-    long microseconds = end.tv_usec - begin.tv_usec;
-    double elapsed = seconds + microseconds*1e-6;
+	long seconds = end.tv_sec - begin.tv_sec;
+	long microseconds = end.tv_usec - begin.tv_usec;
+	double elapsed = seconds + microseconds*1e-6;
 
 	printf("Status of encryption: %d\n", (uint8_t)status);
 	
@@ -84,10 +84,10 @@ int main(int argc, char *argv[])
 
 	gettimeofday(&end, 0);
 	seconds = end.tv_sec - begin.tv_sec;
-    microseconds = end.tv_usec - begin.tv_usec;
-    elapsed = seconds + microseconds*1e-6;
+	microseconds = end.tv_usec - begin.tv_usec;
+	elapsed = seconds + microseconds*1e-6;
 
-    printf("Status of decryption: %d\n", (uint8_t)status);
+	printf("Status of decryption: %d\n", (uint8_t)status);
 
 	if (status != IZStatusSuccess) {
 		printf("DECRYPTION FAILED\n");
