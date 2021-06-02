@@ -15,7 +15,7 @@ typedef enum izCipherAlgorithms_t {
 typedef enum izCipherMode_t {
 	izIdCipherModeECB,
 	izIdCipherModeCTR,
-	// izIdCipherModeOFB,
+	izIdCipherModeOFB,
 	// izIdCipherModeCBC,
 	// izIdCipherModeCFB,
 	// izIdCipherModeMAC

@@ -47,7 +47,40 @@ izStatus izEncrypt(
 					if (sKeySize != 32) {
 						return IZStatusInvalidParameter;
 					}
-					sStatus = IZEncryptDecryptCTR(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, MAGMA_BLOCK_SIZE, cvIv, psIvSize, FirstParam);
+					sStatus = IZEncryptDecryptCTR(&izMagmaEncrypt, 
+												  cvKey, 
+												  cvIn, 
+												  sInSize, 
+												  vOut, 
+												  psOutSize, 
+												  MAGMA_BLOCK_SIZE, 
+												  cvIv, 
+												  psIvSize, 
+												  FirstParam);
+
+					break;
+				case izIdCipherAlgorithmKyznechik:
+					return IZStatusNotSupported;
+			}
+			break;
+		case izIdCipherModeOFB:
+			switch (eAlgorithm)
+			{
+				case izIdCipherAlgorithmMagma:
+					if (sKeySize != 32) {
+						return IZStatusInvalidParameter;
+					}
+					sStatus = IZEncryptDecryptOFB(&izMagmaEncrypt, 
+												  cvKey, 
+												  cvIn, 
+												  sInSize, 
+												  vOut, 
+												  psOutSize, 
+												  MAGMA_BLOCK_SIZE, 
+												  cvIv, 
+												  psIvSize, 
+												  FirstParam,
+												  SecondParam);
 
 					break;
 				case izIdCipherAlgorithmKyznechik:
@@ -103,7 +136,40 @@ izStatus izDecrypt(
 					if (sKeySize != 32) {
 						return IZStatusInvalidParameter;
 					}
-					sStatus = IZEncryptDecryptCTR(&izMagmaEncrypt, cvKey, cvIn, sInSize, vOut, psOutSize, MAGMA_BLOCK_SIZE, cvIv, psIvSize, FirstParam);
+					sStatus = IZEncryptDecryptCTR(&izMagmaEncrypt, 
+												  cvKey, 
+												  cvIn, 
+												  sInSize, 
+												  vOut, 
+												  psOutSize, 
+												  MAGMA_BLOCK_SIZE, 
+												  cvIv, 
+												  psIvSize, 
+												  FirstParam);
+
+					break;
+				case izIdCipherAlgorithmKyznechik:
+					return IZStatusNotSupported;
+			}
+			break;
+		case izIdCipherModeOFB:
+			switch (eAlgorithm)
+			{
+				case izIdCipherAlgorithmMagma:
+					if (sKeySize != 32) {
+						return IZStatusInvalidParameter;
+					}
+					sStatus = IZEncryptDecryptOFB(&izMagmaEncrypt, 
+												  cvKey, 
+												  cvIn, 
+												  sInSize, 
+												  vOut, 
+												  psOutSize, 
+												  MAGMA_BLOCK_SIZE, 
+												  cvIv, 
+												  psIvSize, 
+												  FirstParam,
+												  SecondParam);
 
 					break;
 				case izIdCipherAlgorithmKyznechik:

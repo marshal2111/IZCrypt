@@ -109,6 +109,58 @@ izStatus IZEncryptDecryptCTR(
 	return sStatus;
 }	
 
+izStatus IZEncryptDecryptOFB(
+	void (*EncFunc) (uint8_t*, const uint8_t*, uint8_t*), 
+	const uint8_t* vKey, 
+	const uint8_t* vIn, 
+	size_t sInSize, 
+	uint8_t* vOut, 
+	size_t* psOutSize, 
+	size_t sBlockSize, 
+	const uint8_t* vIv, 
+	size_t sIvSize,
+	uint16_t uS,
+	uint16_t uM)
+{
+	izStatus sStatus = IZStatusSuccess;
+
+	if (sIvSize != uM) {
+		return IZStatusError;
+	}
+	if ((vIv == NULL) || (sIvSize == 0) || (uS == 0) || (uM == 0)) {
+		return IZStatusInvalidParameter;
+	}
+
+	uint8_t r_bytes = sInSize % uS;
+	uint32_t numBlocks = sInSize / uS;
+	uint8_t uEncryptedOFB[sInSize];
+	uint8_t uR[sIvSize];
+	uint8_t uRBuff[uM - sBlockSize];
+	memcpy(uR, vIv, sIvSize);
+
+	for (uint32_t i = 0; i < numBlocks; ++i) {
+		EncFunc(vKey, uR, uEncryptedOFB);
+		for (uint16_t j = 0; j < uS; ++j) {
+			vOut[j + i * uS] = uEncryptedOFB[sBlockSize - uS + j] ^ vIn[i * uS + j];
+		}
+		for (uint16_t c = sBlockSize; c < uM; ++c) {
+			uRBuff[c - sBlockSize] = uR[c]; 
+		}
+		memcpy(uR, uRBuff, uM - sBlockSize);	
+		memcpy(uR + uM - sBlockSize, uEncryptedOFB, sBlockSize);
+	}	
+
+	EncFunc(vKey, uR, uEncryptedOFB);	
+	for (uint16_t j = 0; j < r_bytes; ++j) {
+			vOut[j + numBlocks * uS] = uEncryptedOFB[sBlockSize - r_bytes + j] ^ vIn[numBlocks * uS + j];
+	}
+
+	*psOutSize = sInSize;
+
+	return sStatus;
+}	
+
+	
 
 static void izAddCTR8(uint8_t* uCTR, size_t sIvSize)
 {
